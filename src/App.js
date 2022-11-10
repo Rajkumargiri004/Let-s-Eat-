@@ -1,58 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import Loading from './component/Loading'
-import Tours from './component/Tours'
-import './App.css'
-// ATTENTION!!!!!!!!!!
-// I SWITCHED TO PERMANENT DOMAIN
-const url = 'https://course-api.com/react-tours-project'
+import React from 'react'
+import Menu from './component/Menu'
+import Category from './component/Category'
+import Data from './component/Data'
+import { useState } from 'react'
 
-function App() {
-  const [loading, setLoading] = useState(true)
-  const [tours, setTours] = useState([])
+const App = () => {
+  const [menuItem , setMenuItem] = useState(Data)
 
-  const removeTour = (id) => {
-    const newTours = tours.filter((tour) => tour.id !== id)
-    setTours(newTours)
+
+
+  const filterItem = (breakfast)=>{
+      if (breakfast==='Menu'){
+    setMenuItem(Data)
+    return
+  }
+    const newItems = Data.filter((curElm)=>curElm.category === breakfast)
+    setMenuItem(newItems)
   }
 
-  const fetchTours = async () => {
-    setLoading(true)
-    try {
-      const response = await fetch(url)
-      const tours = await response.json()
-      setLoading(false)
-      setTours(tours)
-    } catch (error) {
-      setLoading(false)
-      console.log(error)
-    }
-  }
-  useEffect(() => {
-    fetchTours()
-  }, [])
-  if (loading) {
-    return (
-      <main>
-        <Loading />
-      </main>
-    )
-  }
-  if (tours.length === 0) {
-    return (
-      <main>
-        <div className='title'>
-          <h2>no tours left</h2>
-          <button className='btn' onClick={() => fetchTours()}>
-            refresh
-          </button>
-        </div>
-      </main>
-    )
-  }
+
   return (
+    <>
     <main>
-      <Tours tours={tours} removeTour={removeTour} />
+      <section className='menu section'>
+        <div className='title'>
+          <h3> Let's Eat</h3>
+          
+          <Category filterItem={filterItem}/>
+          <Menu Data={menuItem}/>
+        </div>
+      </section>
     </main>
+    </>
   )
 }
 
